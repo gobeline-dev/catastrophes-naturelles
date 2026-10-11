@@ -1,0 +1,12 @@
+{
+  "name": "catastrophes-naturelles",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node tools/serve.cjs",
+    "test": "node --test tools/verify.test.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "29.1.1"
+  }
+}

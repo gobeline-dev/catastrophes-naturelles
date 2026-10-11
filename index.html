@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#152c38">
+  <meta name="description" content="Un exposé de cinq minutes pour découvrir les séismes, les tsunamis, les volcans et les tornades, avec des animations adaptées au CE1.">
+  <title>Quand la nature bouge — Exposé CE1</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" type="module"></script>
+</head>
+<body>
+  <header class="header">
+    <a href="#" class="brand" aria-label="Retour à l’introduction"><span class="brand-mark" aria-hidden="true">✳</span> Les petits explorateurs</a>
+    <span class="header-note">CE1 <span aria-hidden="true">·</span> 5 minutes</span>
+  </header>
+  <main>
+    <nav class="chapters" aria-label="Les étapes de l’exposé"></nav>
+    <section class="presentation" aria-labelledby="slide-title">
+      <div class="story">
+        <p class="eyebrow" id="eyebrow"></p>
+        <h1 id="slide-title"></h1>
+        <p class="lead" id="lead"></p>
+        <div class="keywords" id="keywords"></div>
+        <div class="concept" id="concept"></div>
+      </div>
+      <div class="visual">
+        <div class="visual-top"><span id="scene-label"></span><span class="model-label">Schéma simplifié</span></div>
+        <div class="scene-wrap"><canvas id="scene" role="img" aria-label="Notre planète en mouvement">Votre navigateur ne peut pas afficher les scènes en trois dimensions.</canvas><div id="scene-labels" aria-hidden="true"></div></div>
+        <p id="webgl-error" role="alert" hidden>La 3D n’est pas disponible. Essayez un navigateur récent avec l’accélération graphique activée. Les textes de l’exposé restent disponibles.</p>
+        <p class="scene-status" id="scene-status" aria-live="polite"></p>
+        <div class="animation-controls">
+          <button class="button primary" id="animate" type="button">▶ Lancer l’animation</button>
+          <button class="button quiet" id="pause" type="button" hidden>Pause</button>
+        </div>
+      </div>
+    </section>
+    <div class="bottom-bar">
+      <div class="chapter-progress"><span id="step-count"></span><span id="duration"></span></div>
+      <div class="navigation"><button class="button quiet" id="previous" type="button">← Précédent</button><button class="button next" id="next" type="button">Suivant →</button></div>
+    </div>
+    <section class="speaker" aria-label="Aide pour l’exposé">
+      <details id="speaker-notes"><summary>Mon petit texte à dire <span>et mon geste pour expliquer</span></summary><div class="speaker-content"><p id="script"></p><p class="gesture" id="gesture"></p></div></details>
+    </section>
+    <footer><span>Observer. Comprendre. Se protéger.</span><details class="sources"><summary>Pour les parents & les enseignants</summary><div><p>Déroulé : 30 secondes d’introduction, 1 minute par phénomène, 30 secondes de conclusion. Le temps inclut les animations, les gestes et les pauses. Répétez une fois avec un chronomètre.</p><p>Les animations illustrent les mécanismes : les tailles, les vitesses et les mouvements sont simplifiés. Les consignes de protection dépendent du lieu ; en cas d’alerte, suivez celles des autorités.</p><p>Sources scientifiques : <a href="https://www.usgs.gov/faqs/what-earthquake-and-what-causes-them-happen" target="_blank" rel="noopener">USGS — séismes</a>, <a href="https://www.usgs.gov/faqs/what-are-tsunamis" target="_blank" rel="noopener">USGS — tsunamis</a>, <a href="https://www.usgs.gov/educational-resources/natural-hazards-education" target="_blank" rel="noopener">USGS — volcans et risques naturels</a>, <a href="https://www.noaa.gov/education/resource-collections/weather-atmosphere/tornadoes" target="_blank" rel="noopener">NOAA — tornades</a>.</p></div></details></footer>
+  </main>
+</body>
+</html>
