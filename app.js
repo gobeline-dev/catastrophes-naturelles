@@ -1,14 +1,14 @@
 import { slides } from './content.js';
-import { NatureRenderer } from './scenes.js';
+import { NatureRenderer, concepts } from './scenes.js';
 
 const $=id=>document.getElementById(id);
 const clamp=(x,a=0,b=1)=>Math.min(b,Math.max(a,x));
 const reducedMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
-const length=11000;
-let current=0,animation=null,startTime=0,elapsed=0,paused=false,stage=-1,viewer=null;
+const length=16000;
+let current=0,animation=null,startTime=0,elapsed=0,paused=false,stage=-1,viewer=null,conceptName='cartoon',progress=0;
 try { viewer=new NatureRenderer($('scene'),$('scene-labels')); }
 catch(error) { $('webgl-error').hidden=false;$('scene').hidden=true;console.error('Initialisation WebGL impossible',error); }
-function draw(p=0){viewer?.draw(p);const s=slides[current];const nextStage=Math.min(s.status.length-1,Math.floor(p*4));if(stage!==nextStage){stage=nextStage;$('scene-status').textContent=s.status[stage];}}
+function draw(p=0){progress=clamp(p);viewer?.draw(progress);const s=slides[current];const thresholds=s.stageTimes||[0,.25,.5,.75];const nextStage=Math.min(s.status.length-1,thresholds.filter(t=>progress>=t).length-1);$('scrub').value=Math.round(progress*1000);$('time-value').textContent=`${Math.round(progress*100)} %`;if(stage!==nextStage){stage=nextStage;$('scene-status').textContent=s.status[stage];document.querySelectorAll('.stage-button').forEach((button,i)=>button.setAttribute('aria-pressed',i===stage));}}
 function stop(){if(animation!==null)cancelAnimationFrame(animation);animation=null;paused=false;elapsed=0;stage=-1;$('pause').hidden=true;$('animate').disabled=!viewer||viewer.lost;}
 function render(index){
   stop();current=clamp(index,0,slides.length-1);const s=slides[current];
@@ -21,11 +21,17 @@ function render(index){
   $('previous').disabled=current===0;$('next').disabled=current===5;$('next').textContent=current===4?'Pour finir →':'Suivant →';
   $('animate').hidden=current===0||current===5;$('animate').textContent=reducedMotion.matches?'Voir les étapes →':'▶ Lancer l’animation';
   document.querySelectorAll('.chapter').forEach((el,i)=>{el.classList.toggle('active',i===current);if(i===current)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current');});
-  viewer?.select(current);draw();
+  $('timeline').hidden=current===0||current===5;
+  const shortLabels=s.stageLabels||['Au début','Ça bouge','Le phénomène','À la fin'];
+  $('stage-buttons').replaceChildren(...shortLabels.map((text,i)=>{const b=document.createElement('button');b.type='button';b.className='stage-button';b.textContent=text;b.setAttribute('aria-label',s.status[i]||text);b.addEventListener('click',()=>{stop();draw((s.snapshots||[0,.38,.66,1])[i]);});return b;}));
+  viewer?.select(current,conceptName);draw();
 }
 function tick(now){elapsed=now-startTime;draw(clamp(elapsed/length));if(elapsed<length){animation=requestAnimationFrame(tick);}else{animation=null;$('pause').hidden=true;$('animate').disabled=!viewer||viewer.lost;$('animate').textContent='↻ Revoir l’animation';}}
 document.querySelector('.chapters').replaceChildren(...slides.map((s,i)=>{const b=document.createElement('button');b.type='button';b.className='chapter';b.innerHTML=`<span class="chapter-number">${String(i+1).padStart(2,'0')}</span>${s.nav}`;b.addEventListener('click',()=>render(i));return b;}));
-$('animate').addEventListener('click',()=>{if(reducedMotion.matches){const p=stage>=3?0:(stage+1)/4+.03;draw(p);return;}stop();$('animate').disabled=true;$('pause').hidden=false;$('pause').textContent='Pause';startTime=performance.now();animation=requestAnimationFrame(tick);});
+$('animate').addEventListener('click',()=>{if(reducedMotion.matches){const next=stage>=3?0:stage+1;draw((slides[current].snapshots||[0,.38,.66,1])[next]);return;}stop();$('animate').disabled=true;$('pause').hidden=false;$('pause').textContent='Pause';startTime=performance.now();animation=requestAnimationFrame(tick);});
+$('scrub').addEventListener('input',()=>{stop();draw(Number($('scrub').value)/1000);});
+$('concept-options').replaceChildren(...Object.entries(concepts).map(([key,value])=>{const button=document.createElement('button');button.type='button';button.className='concept-button';button.textContent=value.name;button.setAttribute('aria-pressed',key===conceptName);button.dataset.concept=key;button.addEventListener('click',()=>{const frame=progress;stop();conceptName=key;document.body.dataset.concept=key;$('concept-description').textContent=value.description;viewer?.select(current,conceptName);draw(frame);document.querySelectorAll('.concept-button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.concept===key));});return button;}));
+document.body.dataset.concept=conceptName;
 $('pause').addEventListener('click',()=>{if(paused){paused=false;startTime=performance.now()-elapsed;animation=requestAnimationFrame(tick);$('pause').textContent='Pause';}else{paused=true;cancelAnimationFrame(animation);animation=null;$('pause').textContent='Reprendre';}});
 $('previous').addEventListener('click',()=>render(current-1));$('next').addEventListener('click',()=>render(current+1));
 document.querySelector('.brand').addEventListener('click',e=>{e.preventDefault();render(0);});

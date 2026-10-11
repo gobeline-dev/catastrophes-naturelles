@@ -2,6 +2,10 @@
 
 Exposé interactif de cinq minutes, adapté au CE1 : séismes, tsunamis, éruptions volcaniques et tornades.
 
+Trois concepts visuels comparables : **dessin animé**, **bande dessinée** (contours et bruitages écrits) et **mini-jouets** (matériaux et vue de maquette). Les quatre moments de chaque animation peuvent être sélectionnés ou parcourus avec le curseur du temps.
+
+Le tsunami se déroule sur une plage avec palmiers et parasol : retrait visible de la mer, arrivée de la vague et inondation du sable. Ce retrait est un scénario possible, pas une règle pour tous les tsunamis. Les mouvements sont volontairement amplifiés pour l’apprentissage.
+
 ## Présenter
 
 Ouvrir la page, avancer avec les boutons ou les flèches du clavier, puis lancer l’animation de chaque phénomène. Le texte à dire et le geste suggéré se trouvent sous chaque étape.

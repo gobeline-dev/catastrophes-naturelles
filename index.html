@@ -16,6 +16,10 @@
   </header>
   <main>
     <nav class="chapters" aria-label="Les étapes de l’exposé"></nav>
+    <section class="concept-picker" aria-label="Comparer les trois concepts visuels">
+      <div><span class="picker-label">CHOISIS TON UNIVERS</span><p id="concept-description">Couleurs vives, formes rondes et mouvements très visibles.</p></div>
+      <div class="concept-options" id="concept-options" role="group" aria-label="Style du dessin"></div>
+    </section>
     <section class="presentation" aria-labelledby="slide-title">
       <div class="story">
         <p class="eyebrow" id="eyebrow"></p>
@@ -29,6 +33,11 @@
         <div class="scene-wrap"><canvas id="scene" role="img" aria-label="Notre planète en mouvement">Votre navigateur ne peut pas afficher les scènes en trois dimensions.</canvas><div id="scene-labels" aria-hidden="true"></div></div>
         <p id="webgl-error" role="alert" hidden>La 3D n’est pas disponible. Essayez un navigateur récent avec l’accélération graphique activée. Les textes de l’exposé restent disponibles.</p>
         <p class="scene-status" id="scene-status" aria-live="polite"></p>
+        <div id="timeline" class="timeline" hidden>
+          <div id="stage-buttons" class="stage-buttons" role="group" aria-label="Les moments de l’animation"></div>
+          <label class="scrub-label" for="scrub">Fais avancer le temps <span id="time-value">0 %</span></label>
+          <input id="scrub" type="range" min="0" max="1000" value="0" aria-label="Avancement de l’animation">
+        </div>
         <div class="animation-controls">
           <button class="button primary" id="animate" type="button">▶ Lancer l’animation</button>
           <button class="button quiet" id="pause" type="button" hidden>Pause</button>
@@ -42,7 +51,7 @@
     <section class="speaker" aria-label="Aide pour l’exposé">
       <details id="speaker-notes"><summary>Mon petit texte à dire <span>et mon geste pour expliquer</span></summary><div class="speaker-content"><p id="script"></p><p class="gesture" id="gesture"></p></div></details>
     </section>
-    <footer><span>Observer. Comprendre. Se protéger.</span><details class="sources"><summary>Pour les parents & les enseignants</summary><div><p>Déroulé : 30 secondes d’introduction, 1 minute par phénomène, 30 secondes de conclusion. Le temps inclut les animations, les gestes et les pauses. Répétez une fois avec un chronomètre.</p><p>Les animations illustrent les mécanismes : les tailles, les vitesses et les mouvements sont simplifiés. Les consignes de protection dépendent du lieu ; en cas d’alerte, suivez celles des autorités.</p><p>Sources scientifiques : <a href="https://www.usgs.gov/faqs/what-earthquake-and-what-causes-them-happen" target="_blank" rel="noopener">USGS — séismes</a>, <a href="https://www.usgs.gov/faqs/what-are-tsunamis" target="_blank" rel="noopener">USGS — tsunamis</a>, <a href="https://www.usgs.gov/educational-resources/natural-hazards-education" target="_blank" rel="noopener">USGS — volcans et risques naturels</a>, <a href="https://www.noaa.gov/education/resource-collections/weather-atmosphere/tornadoes" target="_blank" rel="noopener">NOAA — tornades</a>.</p></div></details></footer>
+    <footer><span>Observer. Comprendre. Se protéger.</span><details class="sources"><summary>Pour les parents & les enseignants</summary><div><p>Déroulé : 30 secondes d’introduction, 1 minute par phénomène, 30 secondes de conclusion. Le temps inclut les animations, les gestes et les pauses. Répétez une fois avec un chronomètre.</p><p>Les animations illustrent les mécanismes : les tailles, les vitesses et les mouvements sont simplifiés et amplifiés pour être visibles. Le tsunami représente le cas où la mer se retire avant l’arrivée des vagues ; ce retrait n’est pas systématique. Une seule arrivée de vague est illustrée, mais un tsunami est une série de vagues. Les consignes de protection dépendent du lieu ; en cas d’alerte, suivez celles des autorités.</p><p>Sources scientifiques : <a href="https://www.usgs.gov/faqs/what-earthquake-and-what-causes-them-happen" target="_blank" rel="noopener">USGS — séismes</a>, <a href="https://www.noaa.gov/jetstream/tsunamis/tsunami-inundation" target="_blank" rel="noopener">NOAA — retrait de la mer et inondation</a>, <a href="https://www.usgs.gov/educational-resources/natural-hazards-education" target="_blank" rel="noopener">USGS — volcans et risques naturels</a>, <a href="https://www.noaa.gov/education/resource-collections/weather-atmosphere/tornadoes" target="_blank" rel="noopener">NOAA — tornades</a>.</p></div></details></footer>
   </main>
 </body>
 </html>
