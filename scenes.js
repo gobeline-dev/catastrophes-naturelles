@@ -1,4 +1,5 @@
 import * as THREE from './vendor/three.module.js';
+import { createPlateScene } from './tectonics.js';
 
 const C={grass:0x79c855,earth:0xeab666,deep:0xb6814f,water:0x16b9d6,foam:0xe8ffff,rock:0x9374ae,lava:0xff7136,cream:0xffe9b0,roof:0xee6461,cloud:0x8d99cd};
 const clamp=x=>Math.max(0,Math.min(1,x));
@@ -38,11 +39,6 @@ export function tsunamiState(p){
   return {shore,crest,waveHeight,withdrawal:clamp((p-.16)/.25),flood:clamp((p-.76)/.2)};
 }
 
-export const concepts={
-  cartoon:{name:'Dessin animé',description:'Couleurs vives, formes rondes et mouvements très visibles.'},
-  comic:{name:'Bande dessinée',description:'Contours noirs, couleurs franches et bruitages écrits.'},
-  toys:{name:'Mini-jouets',description:'Une maquette en plastique coloré, vue un peu plus de haut.'}
-};
 function applyConcept(group,concept){
   const meshes=[];group.traverse(o=>{if(o.isMesh)meshes.push(o);});
   for(const o of meshes){
@@ -51,7 +47,7 @@ function applyConcept(group,concept){
       o.material=new THREE.MeshToonMaterial({color:old.color,side:old.side,transparent:old.transparent,opacity:old.opacity,depthWrite:old.depthWrite,emissive:old.emissive||0x000000,emissiveIntensity:old.emissiveIntensity??1});
       old.dispose();
     }else{o.material.roughness=.28;o.material.metalness=.02;}
-    if(concept==='comic'&&o.geometry.type!=='PlaneGeometry'&&!o.material.transparent&&o.geometry.type!=='TubeGeometry'){
+    if(concept==='comic'&&o.name!=='descending-plate'&&o.geometry.type!=='PlaneGeometry'&&!o.material.transparent&&o.geometry.type!=='TubeGeometry'){
       const edge=new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry,32),new THREE.LineBasicMaterial({color:0x283148}));edge.userData.outline=true;o.add(edge);
       if(['SphereGeometry','CylinderGeometry','ConeGeometry','TorusGeometry'].includes(o.geometry.type)){
         const silhouette=new THREE.Mesh(o.geometry.clone(),new THREE.MeshBasicMaterial({color:0x283148,side:THREE.BackSide}));silhouette.scale.setScalar(1.025);silhouette.userData.outline=true;o.add(silhouette);
@@ -60,7 +56,7 @@ function applyConcept(group,concept){
   }
 }
 
-export function createModel(index,concept='cartoon'){
+export function createModel(index,concept='comic',plateMode='subduction'){
   const group=new THREE.Group();
   const labels=[];
   const label=(text,x,y,z)=>labels.push({text,point:new THREE.Vector3(x,y,z)});
@@ -75,13 +71,8 @@ export function createModel(index,concept='cartoon'){
     update=()=>{globe.rotation.y=.15;};
   }
   if(index===1){
-    const left=new THREE.Group(),right=new THREE.Group();group.add(left,right);left.position.x=-1.55;right.position.x=1.55;
-    for(const g of [left,right]){slab(g,3,3.4);}
-    const homes=[house(left,-.3,0,.4,.9),house(right,.3,0,.25,1),house(left,.5,0,-.8,.6)];tree(right,1,0,-.7,.8);
-    const source=ball(group,.1,C.lava,0,-.55,1.78,{emissive:C.lava,emissiveIntensity:.3});
-    const rings=Array.from({length:4},()=>mesh(group,new THREE.TorusGeometry(1,.045,8,70),C.lava,0,-.55,1.82,{transparent:true,opacity:0}));
-    label('Les roches',-1.9,-1.08,1.7);label('La faille',.15,-1.05,1.75);label('Le sol',2.1,.16,1.75);
-    update=p=>{const slip=ease((p-.18)/.12)*.58;const shaking=p>.27&&p<.92?Math.sin(p*125)*.12*Math.sin((p-.27)/.65*Math.PI):0;right.position.x=1.55+slip+shaking;right.position.y=-slip*.35;left.position.x=-1.55-slip*.35-shaking;homes.forEach((h,i)=>{h.rotation.z=p>.27&&p<.92?Math.sin(p*100+i)*.18*Math.sin((p-.27)/.65*Math.PI):0;});rings.forEach((r,i)=>{const q=clamp((p-.3-i*.085)/.55);r.visible=q>0&&q<1;r.scale.setScalar(.05+q*3.3);r.material.opacity=(1-q)*.95;});source.scale.setScalar(1+Math.sin(p*35)*.35);};
+    const plates=createPlateScene(plateMode);
+    group.add(plates.group);labels.push(...plates.labels);update=plates.update;
   }
   if(index===2){
     // A beach diorama: the moving water edge reveals sand, then floods the beach.
@@ -177,7 +168,7 @@ export class NatureRenderer {
     this.resize();
   }
   resize(){const w=this.canvas.parentElement.clientWidth;if(!w)return;const h=w*470/700;this.renderer.setSize(w,h,false);const aspect=w/h;const height=6.3;this.camera.left=-height*aspect/2;this.camera.right=height*aspect/2;this.camera.top=height/2;this.camera.bottom=-height/2;this.camera.updateProjectionMatrix();this.paint();}
-  select(index,concept='cartoon'){if(this.model){this.scene.remove(this.model.group);this.model.dispose();}this.model=createModel(index,concept);this.camera.position.set(concept==='comic'?2:5,concept==='toys'?7.5:4.3,11);this.camera.lookAt(0,index===2?.6:1.05,0);this.scene.add(this.model.group);this.labelRoot.replaceChildren(...this.model.labels.map(l=>{const el=document.createElement('span');el.className='scene-tag';el.textContent=l.text;l.el=el;return el;}));this.draw(0);}
+  select(index,plateMode='subduction'){if(this.model){this.scene.remove(this.model.group);this.model.dispose();}this.model=createModel(index,'comic',plateMode);this.camera.position.set(2,index===1?(plateMode==='sliding'?7:3.5):4.3,11);this.camera.lookAt(0,index===1?.1:index===2?.6:1.05,0);this.scene.add(this.model.group);this.labelRoot.replaceChildren(...this.model.labels.map(l=>{const el=document.createElement('span');el.className='scene-tag';el.textContent=l.text;l.el=el;return el;}));this.draw(0);}
   draw(progress){this.progress=progress;this.model?.update(progress);this.paint();}
-  paint(){if(this.lost)return;this.scene.updateMatrixWorld(true);this.renderer.render(this.scene,this.camera);for(const label of this.model?.labels||[]){const pos=label.point.clone().project(this.camera);label.el.style.left=`${(pos.x*.5+.5)*100}%`;label.el.style.top=`${(-pos.y*.5+.5)*100}%`;}}
+  paint(){if(this.lost)return;this.scene.updateMatrixWorld(true);this.renderer.render(this.scene,this.camera);for(const label of this.model?.labels||[]){const pos=label.point.clone().project(this.camera);label.el.hidden=this.progress<(label.from??0)||this.progress>(label.to??1);label.el.style.left=`${(pos.x*.5+.5)*100}%`;label.el.style.top=`${(-pos.y*.5+.5)*100}%`;}}
 }

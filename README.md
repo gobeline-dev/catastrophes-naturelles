@@ -2,7 +2,9 @@
 
 Exposé interactif de cinq minutes, adapté au CE1 : séismes, tsunamis, éruptions volcaniques et tornades.
 
-Trois concepts visuels comparables : **dessin animé**, **bande dessinée** (contours et bruitages écrits) et **mini-jouets** (matériaux et vue de maquette). Les quatre moments de chaque animation peuvent être sélectionnés ou parcourus avec le curseur du temps.
+Style **bande dessinée** avec contours noirs et bruitages écrits. Les quatre moments de chaque animation peuvent être sélectionnés ou parcourus avec le curseur du temps.
+
+La partie séismes propose quatre mouvements des plaques : **subduction**, **divergence**, **coulissage** et **collision continentale**. Les flèches indiquent les directions et une vue en coupe montre la plaque qui plonge. Le texte distingue le mouvement lent des plaques du glissement brusque à l’origine d’un séisme ; les montagnes sont présentées comme une formation sur des millions d’années.
 
 Le tsunami se déroule sur une plage avec palmiers et parasol : retrait visible de la mer, arrivée de la vague et inondation du sable. Ce retrait est un scénario possible, pas une règle pour tous les tsunamis. Les mouvements sont volontairement amplifiés pour l’apprentissage.
 

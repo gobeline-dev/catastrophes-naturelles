@@ -5,7 +5,7 @@ const root = path.resolve(__dirname, '..');
 http.createServer((req, res) => {
   const pathname = new URL(req.url, 'http://localhost').pathname;
   const name = pathname === '/' ? 'index.html' : pathname.slice(1);
-  if (!['index.html', 'style.css', 'app.js', 'content.js', 'scenes.js', 'vendor/three.module.js', 'vendor/three.core.js'].includes(name)) {
+  if (!['index.html', 'style.css', 'app.js', 'content.js', 'scenes.js', 'tectonics.js', 'vendor/three.module.js', 'vendor/three.core.js'].includes(name)) {
     res.writeHead(404);
     res.end();
     return;
